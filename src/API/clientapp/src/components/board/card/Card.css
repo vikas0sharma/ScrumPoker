@@ -1,0 +1,23 @@
+.card {
+  border: none;
+  border-radius: 15px;
+}
+.img-card {
+  margin-top: 100px;
+  margin-left: 50px;
+  margin-right: 50px;
+
+  cursor: pointer;
+  transition: transform 5s;
+  transform-style: preserve-3d;
+}
+.img-card-fliped {
+  transform: rotateY(360deg);
+}
+
+.i-card {
+  border-radius: 18px;
+  -webkit-box-shadow: 10px 10px 33px 0px rgba(0, 0, 0, 0.75);
+  -moz-box-shadow: 10px 10px 33px 0px rgba(0, 0, 0, 0.75);
+  box-shadow: 10px 10px 33px 0px rgba(0, 0, 0, 0.75);
+}
