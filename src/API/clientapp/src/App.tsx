@@ -17,7 +17,7 @@ function App() {
           <Route exact path="/">
             <SprintDetail />
           </Route>
-          <Route path="/board">
+          <Route path="/board/:id">
             <Board />
           </Route>
         </Switch>

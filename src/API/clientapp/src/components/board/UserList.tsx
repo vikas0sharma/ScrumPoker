@@ -9,7 +9,7 @@ export const UserList = () => {
       gender: 'M',
     },
     {
-      name: 'shruti',
+      name: 'abc',
       id: 12,
       gender: 'F',
     },
