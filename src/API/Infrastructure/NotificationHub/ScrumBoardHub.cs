@@ -12,7 +12,7 @@ namespace API.Infrastructure.NotificationHub
             await Clients.Caller.SendAsync("Message", "Connected successfully!");
         }
 
-        public async Task AddToBoard(Guid boardId)
+        public async Task SubscribeToBoard(Guid boardId)
         {
             await Groups.AddToGroupAsync(Context.ConnectionId, boardId.ToString());
             await Clients.Caller.SendAsync("Message", "Added to board successfully!");
