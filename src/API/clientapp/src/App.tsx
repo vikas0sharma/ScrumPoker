@@ -7,6 +7,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 
 import { Board } from './components/board/Board';
 import { SprintDetail } from './components/admin/SprintDetail';
+import { CreateUser } from './components/board/user/CreateUser';
 
 function App() {
   return (
@@ -17,7 +18,10 @@ function App() {
           <Route exact path="/">
             <SprintDetail />
           </Route>
-          <Route path="/board/:id">
+          <Route path="/users/:id">
+            <CreateUser />
+          </Route>
+          <Route path="/boards/:id">
             <Board />
           </Route>
         </Switch>

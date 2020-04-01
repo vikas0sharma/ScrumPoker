@@ -50,13 +50,23 @@ namespace API.Controllers
             return NotFound();
         }
 
+        [HttpPost("users/{boardId}")]
         public async Task<IActionResult> AddUser(Guid boardId, User user)
         {
+            user.Id = Guid.NewGuid();
             var isAdded = await scrumRepository.AddUserToBoard(boardId, user);
             await hub.Clients.Group(boardId.ToString())
                 .SendAsync("UsersAdded", await scrumRepository.GetUsersFromBoard(boardId));
 
             return Ok(isAdded);
+        }
+
+        [HttpGet("users/{boardId}")]
+        public async Task<IActionResult> GetUsers(Guid boardId)
+        {
+            var users = await scrumRepository.GetUsersFromBoard(boardId);
+
+            return Ok(users);
         }
 
         // PUT: api/ScrumBoards/5

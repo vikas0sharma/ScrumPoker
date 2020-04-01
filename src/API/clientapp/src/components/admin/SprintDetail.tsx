@@ -1,11 +1,12 @@
 import React, { useState } from 'react';
 import './SprintDetail.css';
-import { useHistory } from 'react-router-dom';
+import { useHistory, Link } from 'react-router-dom';
+import { King } from '../common/King';
 
 export const SprintDetail = () => {
   const [boardName, setBoardName] = useState('');
-  const history = useHistory();
-  let id: string = '';
+  const [id, setUserLink] = useState('');
+  const [linkState, setLinkState] = useState(false);
 
   const onSubmitHandler = async () => {
     const response = await fetch('https://localhost:5001/scrum-poker/boards', {
@@ -19,19 +20,15 @@ export const SprintDetail = () => {
       body: JSON.stringify({ name: boardName }), // body data type must match "Content-Type" header
     });
 
-    id = await response.json();
-    history.push(`/board/${id}`);
+    const id = await response.json();
+    setUserLink(id);
+    setLinkState(true);
   };
   return (
     <div className="container container-card">
       <div className="card mb-3">
         <div className="row no-gutters">
-          <div className="col-md-4">
-            <img
-              src={`${process.env.PUBLIC_URL}/images/k.png`}
-              className="card-img img-king"
-            />
-          </div>
+          <King></King>
           <div className="col-md-8">
             <div className="card-body">
               <h5 className="card-title">Create your poker board</h5>
@@ -45,13 +42,21 @@ export const SprintDetail = () => {
                 />
               </div>
               <div className="form-group">
-                <label className="float-left">Admin Name</label>
+                <label className="float-left">Description</label>
                 <input
-                  type="input"
+                  type="text"
                   className="form-control form-control-lg rounded-0"
                 />
               </div>
-
+              {linkState === true ? (
+                <div className="form-group">
+                  <label>Please visit and share the url with the team:</label>
+                  <br />
+                  <Link
+                    to={`/users/${id}`}
+                  >{`${window.location.href}users/${id}`}</Link>
+                </div>
+              ) : null}
               <button
                 type="submit"
                 onClick={() => onSubmitHandler()}
