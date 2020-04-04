@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { BrowserRouter as Router, Switch, Route, Link } from 'react-router-dom';
 import logo from './logo.svg';
 import './App.css';
@@ -10,19 +10,23 @@ import { SprintDetail } from './components/admin/SprintDetail';
 import { CreateUser } from './components/board/user/CreateUser';
 
 function App() {
+  const [isAdmin, setAdmin] = useState(false);
+  const isAdminHandler = (isAdmin: boolean) => {
+    setAdmin(isAdmin);
+  };
   return (
     <div className="App">
       <Header />
       <Router>
         <Switch>
           <Route exact path="/">
-            <SprintDetail />
+            <SprintDetail setAdminHandler={isAdminHandler} />
           </Route>
-          <Route path="/users/:id">
-            <CreateUser />
+          <Route path="/boards/:id/users/:userId">
+            <Board />
           </Route>
           <Route path="/boards/:id">
-            <Board />
+            <CreateUser isAdmin={isAdmin} />
           </Route>
         </Switch>
       </Router>

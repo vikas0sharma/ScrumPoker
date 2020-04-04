@@ -1,31 +1,21 @@
 import React, { useState } from 'react';
 import { King } from '../../common/King';
 import { useParams, useHistory } from 'react-router-dom';
+import { createUser } from '../../../api/scrum-poker-api';
 
-export const CreateUser = () => {
+export const CreateUser = (props: { isAdmin: boolean }) => {
   const [userName, setUserName] = useState('');
   const [gender, setGender] = useState('M');
   const history = useHistory();
   const { id } = useParams();
   const onSubmitHandler = async () => {
-    const response = await fetch(
-      `https://localhost:5001/scrum-poker/users/${id}`,
-      {
-        method: 'POST',
-        mode: 'cors',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        redirect: 'follow', // manual, *follow, error
-        referrerPolicy: 'no-referrer', // no-referrer, *client
-        body: JSON.stringify({
-          name: userName,
-          gender: gender,
-        }), // body data type must match "Content-Type" header
-      },
-    );
-    const isCreated = await response.json();
-    if (isCreated) history.push(`/boards/${id}`);
+    const userId = await createUser(id as string, {
+      name: userName,
+      gender: gender,
+      isAdmin: props.isAdmin,
+      point: 0,
+    });
+    if (userId) history.push(`/boards/${id}/users/${userId}`);
   };
 
   return (

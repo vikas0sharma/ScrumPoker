@@ -2,28 +2,26 @@ import React, { useState } from 'react';
 import './SprintDetail.css';
 import { useHistory, Link } from 'react-router-dom';
 import { King } from '../common/King';
+import { createBoard } from '../../api/scrum-poker-api';
 
-export const SprintDetail = () => {
+export const SprintDetail = (props: {
+  setAdminHandler: (isAdmin: boolean) => void;
+}) => {
   const [boardName, setBoardName] = useState('');
   const [id, setUserLink] = useState('');
   const [linkState, setLinkState] = useState(false);
 
   const onSubmitHandler = async () => {
-    const response = await fetch('https://localhost:5001/scrum-poker/boards', {
-      method: 'POST',
-      mode: 'cors',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      redirect: 'follow', // manual, *follow, error
-      referrerPolicy: 'no-referrer', // no-referrer, *client
-      body: JSON.stringify({ name: boardName }), // body data type must match "Content-Type" header
+    const id = await createBoard({
+      name: boardName,
+      description: '',
     });
 
-    const id = await response.json();
     setUserLink(id);
     setLinkState(true);
+    props.setAdminHandler(true);
   };
+
   return (
     <div className="container container-card">
       <div className="card mb-3">
@@ -53,8 +51,8 @@ export const SprintDetail = () => {
                   <label>Please visit and share the url with the team:</label>
                   <br />
                   <Link
-                    to={`/users/${id}`}
-                  >{`${window.location.href}users/${id}`}</Link>
+                    to={`/boards/${id}`}
+                  >{`${window.location.href}boards/${id}`}</Link>
                 </div>
               ) : null}
               <button

@@ -3,7 +3,7 @@ using API.Infrastructure.NotificationHub;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SignalR;
 using System;
-using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace API.Controllers
@@ -21,20 +21,6 @@ namespace API.Controllers
             this.hub = hub;
         }
 
-        // GET: api/ScrumBoards
-        [HttpGet]
-        public IEnumerable<string> Get()
-        {
-            return new string[] { "value1", "value2" };
-        }
-
-        // GET: api/ScrumBoards/5
-        [HttpGet("{id}", Name = "Get")]
-        public string Get(int id)
-        {
-            return "value";
-        }
-
         [HttpPost("boards")]
         public async Task<IActionResult> Post([FromBody] ScrumBoard scrumBoard)
         {
@@ -50,18 +36,34 @@ namespace API.Controllers
             return NotFound();
         }
 
-        [HttpPost("users/{boardId}")]
+        [HttpPost("boards/{boardId}")]
+        public async Task<IActionResult> UpdateUsersPoint(Guid boardId)
+        {
+            var isAdded = await scrumRepository.ClearUsersPoint(boardId);
+            await hub.Clients.Group(boardId.ToString())
+                .SendAsync("UsersAdded", await scrumRepository.GetUsersFromBoard(boardId));
+            if (isAdded)
+            {
+                return Ok(isAdded);
+            }
+            return NotFound();
+        }
+
+        [HttpPost("boards/{boardId}/users")]
         public async Task<IActionResult> AddUser(Guid boardId, User user)
         {
             user.Id = Guid.NewGuid();
             var isAdded = await scrumRepository.AddUserToBoard(boardId, user);
             await hub.Clients.Group(boardId.ToString())
                 .SendAsync("UsersAdded", await scrumRepository.GetUsersFromBoard(boardId));
-
-            return Ok(isAdded);
+            if (isAdded)
+            {
+                return Ok(user.Id);
+            }
+            return NotFound();
         }
 
-        [HttpGet("users/{boardId}")]
+        [HttpGet("boards/{boardId}/users")]
         public async Task<IActionResult> GetUsers(Guid boardId)
         {
             var users = await scrumRepository.GetUsersFromBoard(boardId);
@@ -69,16 +71,22 @@ namespace API.Controllers
             return Ok(users);
         }
 
-        // PUT: api/ScrumBoards/5
-        [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value)
+        [HttpGet("boards/{boardId}/users/{userId}")]
+        public async Task<IActionResult> GetUser(Guid boardId, Guid userId)
         {
+            var users = await scrumRepository.GetUsersFromBoard(boardId);
+            var user = users.FirstOrDefault(u => u.Id == userId);
+            return Ok(user);
         }
 
-        // DELETE: api/ApiWithActions/5
-        [HttpDelete("{id}")]
-        public void Delete(int id)
+        [HttpPut("boards/{boardId}/users")]
+        public async Task<IActionResult> UpdateUser(Guid boardId, User user)
         {
+            var isUpdated = await scrumRepository.UpdateUserPoint(boardId, user.Id, user.Point);
+            await hub.Clients.Group(boardId.ToString())
+                .SendAsync("UsersAdded", await scrumRepository.GetUsersFromBoard(boardId));
+
+            return Ok(isUpdated);
         }
     }
 }

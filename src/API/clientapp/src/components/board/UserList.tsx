@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, FC } from 'react';
 import { User } from './user/User';
 import { UserModel } from '../../models/user-model';
 import { useParams } from 'react-router-dom';
@@ -7,33 +7,23 @@ import {
   HubConnectionState,
   HubConnection,
 } from '@microsoft/signalr';
+import { getBoardUsers } from '../../api/scrum-poker-api';
 
-export const UserList = () => {
+export const UserList: FC<{ state: boolean }> = ({ state }) => {
   const [users, setUsers] = useState<UserModel[]>([]);
   const { id } = useParams();
+  const boardId = id as string;
   useEffect(() => {
     if (users.length === 0) {
       getUsers();
     }
-    setUpSignalRConnection(id as string).then((con) => {
+    setUpSignalRConnection(boardId).then((con) => {
       //connection = con;
     });
   }, []);
 
   const getUsers = async () => {
-    const response = await fetch(
-      `https://localhost:5001/scrum-poker/users/${id}`,
-      {
-        method: 'GET',
-        mode: 'cors',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        redirect: 'follow', // manual, *follow, error
-        referrerPolicy: 'no-referrer', // no-referrer, *client
-      },
-    );
-    const users: UserModel[] = await response.json();
+    const users = await getBoardUsers(boardId);
     setUsers(users);
   };
 
@@ -67,7 +57,7 @@ export const UserList = () => {
   return (
     <div className="container">
       {users.map((u) => (
-        <User key={u.id} data={u}></User>
+        <User key={u.id} data={u} hiddenState={state}></User>
       ))}
     </div>
   );

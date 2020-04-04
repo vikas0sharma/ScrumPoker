@@ -10,12 +10,10 @@ namespace API.Infrastructure.Persistence
 {
     public class ScrumRepository : IScrumRepository
     {
-        private readonly ConnectionMultiplexer redis;
         private readonly IDatabase database;
 
         public ScrumRepository(ConnectionMultiplexer redis)
         {
-            this.redis = redis;
             database = redis.GetDatabase();
         }
 
@@ -41,6 +39,21 @@ namespace API.Infrastructure.Persistence
             return await AddBoard(board);
         }
 
+        public async Task<bool> ClearUsersPoint(Guid boardId)
+        {
+            var data = await database.StringGetAsync(boardId.ToString());
+
+            if (data.IsNullOrEmpty)
+            {
+                return false;
+            }
+
+            var board = JsonSerializer.Deserialize<ScrumBoard>(data);
+            board.Users.ForEach(u => u.Point = 0);
+
+            return await AddBoard(board);
+        }
+
         public async Task<List<User>> GetUsersFromBoard(Guid boardId)
         {
             var data = await database.StringGetAsync(boardId.ToString());
@@ -55,10 +68,17 @@ namespace API.Infrastructure.Persistence
             return board.Users;
         }
 
-        private IServer GetServer()
+        public async Task<bool> UpdateUserPoint(Guid boardId, Guid userId, int point)
         {
-            var endpoint = redis.GetEndPoints();
-            return redis.GetServer(endpoint.First());
+            var data = await database.StringGetAsync(boardId.ToString());
+            var board = JsonSerializer.Deserialize<ScrumBoard>(data);
+            var user = board.Users.FirstOrDefault(u => u.Id == userId);
+            if (user != null)
+            {
+                user.Point = point;
+            }
+
+            return await AddBoard(board);
         }
     }
 }

@@ -11,5 +11,7 @@ namespace API.Contracts
         public string Gender { get; set; }
 
         public int Point { get; set; }
+
+        public bool IsAdmin { get; set; }
     }
 }
