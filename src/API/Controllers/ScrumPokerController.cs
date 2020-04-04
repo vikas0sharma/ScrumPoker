@@ -57,8 +57,11 @@ namespace API.Controllers
             var isAdded = await scrumRepository.AddUserToBoard(boardId, user);
             await hub.Clients.Group(boardId.ToString())
                 .SendAsync("UsersAdded", await scrumRepository.GetUsersFromBoard(boardId));
-
-            return Ok(isAdded);
+            if (isAdded)
+            {
+                return Ok(user.Id);
+            }
+            return NotFound();
         }
 
         [HttpGet("users/{boardId}")]
@@ -67,6 +70,16 @@ namespace API.Controllers
             var users = await scrumRepository.GetUsersFromBoard(boardId);
 
             return Ok(users);
+        }
+
+        [HttpPut("users/{boardId}")]
+        public async Task<IActionResult> UpdateUser(Guid boardId, User user)
+        {
+            var isUpdated = await scrumRepository.UpdateUserPoint(boardId, user.Id, user.Point);
+            await hub.Clients.Group(boardId.ToString())
+                .SendAsync("UsersAdded", await scrumRepository.GetUsersFromBoard(boardId));
+
+            return Ok(isUpdated);
         }
 
         // PUT: api/ScrumBoards/5

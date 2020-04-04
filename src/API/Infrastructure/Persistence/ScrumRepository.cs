@@ -55,6 +55,19 @@ namespace API.Infrastructure.Persistence
             return board.Users;
         }
 
+        public async Task<bool> UpdateUserPoint(Guid boardId, Guid userId, int point)
+        {
+            var data = await database.StringGetAsync(boardId.ToString());
+            var board = JsonSerializer.Deserialize<ScrumBoard>(data);
+            var user = board.Users.FirstOrDefault(u => u.Id == userId);
+            if (user != null)
+            {
+                user.Point = point;
+            }
+
+            return await AddBoard(board); ;
+        }
+
         private IServer GetServer()
         {
             var endpoint = redis.GetEndPoints();

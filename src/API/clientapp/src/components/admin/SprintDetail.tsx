@@ -2,12 +2,14 @@ import React, { useState } from 'react';
 import './SprintDetail.css';
 import { useHistory, Link } from 'react-router-dom';
 import { King } from '../common/King';
+import { connect, useDispatch } from 'react-redux';
+import { createBoard } from '../../redux/actions';
 
-export const SprintDetail = () => {
+const SprintDetail = () => {
   const [boardName, setBoardName] = useState('');
   const [id, setUserLink] = useState('');
   const [linkState, setLinkState] = useState(false);
-
+  const dispatcher = useDispatch();
   const onSubmitHandler = async () => {
     const response = await fetch('https://localhost:5001/scrum-poker/boards', {
       method: 'POST',
@@ -21,6 +23,10 @@ export const SprintDetail = () => {
     });
 
     const id = await response.json();
+
+    dispatcher(
+      createBoard({ boardId: id, userId: '', isAdmin: true, point: 0 }),
+    );
     setUserLink(id);
     setLinkState(true);
   };
@@ -71,3 +77,5 @@ export const SprintDetail = () => {
     </div>
   );
 };
+
+export default connect()(SprintDetail);

@@ -1,12 +1,47 @@
 import React, { FC, useState } from 'react';
 import './Card.css';
+import { useSelector, useDispatch } from 'react-redux';
+import { BoardState, createBoard } from '../../../redux/actions';
 
-const Card: FC<{ path: string; name: string }> = (props) => {
+const Card: FC<{
+  path: string;
+  name: string;
+  val: number;
+}> = (props) => {
+  const s = useSelector((state) => state) as BoardState;
+  const dispatcher = useDispatch();
   const [isToggled, setToggle] = useState(false);
 
+  const updateUserPoint = async () => {
+    const response = await fetch(
+      `https://localhost:5001/scrum-poker/users/${s.boardId}`,
+      {
+        method: 'PUT',
+        mode: 'cors',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          id: s.userId,
+          point: props.val,
+        }),
+        redirect: 'follow', // manual, *follow, error
+        referrerPolicy: 'no-referrer', // no-referrer, *client
+      },
+    );
+    await response.json();
+  };
   const onClickHandler = () => {
     setToggle(!isToggled);
-    console.log(isToggled);
+    dispatcher(
+      createBoard({
+        boardId: s.boardId,
+        userId: s.userId,
+        isAdmin: s.isAdmin,
+        point: props.val,
+      }),
+    );
+    updateUserPoint();
   };
 
   return (

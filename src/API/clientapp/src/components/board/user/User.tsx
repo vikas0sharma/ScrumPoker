@@ -17,7 +17,7 @@ export const User: FC<{ data: UserModel }> = ({ data }) => {
       <div className="media-body"></div>
       <div className="media-right align-self-center">
         <a href="#" className="btn btn-default">
-          Contact Now
+          {data.point}
         </a>
       </div>
     </div>

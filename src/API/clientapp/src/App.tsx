@@ -4,10 +4,9 @@ import logo from './logo.svg';
 import './App.css';
 import Header from './components/common/Header';
 import 'bootstrap/dist/css/bootstrap.min.css';
-
 import { Board } from './components/board/Board';
-import { SprintDetail } from './components/admin/SprintDetail';
 import { CreateUser } from './components/board/user/CreateUser';
+import SprintDetail from './components/admin/SprintDetail';
 
 function App() {
   return (

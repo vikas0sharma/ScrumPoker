@@ -1,12 +1,15 @@
 import React, { useState } from 'react';
 import { King } from '../../common/King';
 import { useParams, useHistory } from 'react-router-dom';
+import { createBoard } from '../../../redux/actions';
+import { useDispatch } from 'react-redux';
 
 export const CreateUser = () => {
   const [userName, setUserName] = useState('');
   const [gender, setGender] = useState('M');
   const history = useHistory();
   const { id } = useParams();
+  const dispatcher = useDispatch();
   const onSubmitHandler = async () => {
     const response = await fetch(
       `https://localhost:5001/scrum-poker/users/${id}`,
@@ -24,8 +27,11 @@ export const CreateUser = () => {
         }), // body data type must match "Content-Type" header
       },
     );
-    const isCreated = await response.json();
-    if (isCreated) history.push(`/boards/${id}`);
+    const userId = await response.json();
+    dispatcher(
+      createBoard({ boardId: id as string, userId, point: 0, isAdmin: false }),
+    );
+    if (userId) history.push(`/boards/${id}`);
   };
 
   return (

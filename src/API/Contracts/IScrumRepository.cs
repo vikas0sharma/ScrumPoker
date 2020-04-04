@@ -11,5 +11,7 @@ namespace API.Contracts
         Task<bool> AddUserToBoard(Guid boardId, User user);
 
         Task<List<User>> GetUsersFromBoard(Guid boardId);
+
+        Task<bool> UpdateUserPoint(Guid boardId, Guid userId, int point);
     }
 }
