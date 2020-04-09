@@ -1,0 +1,37 @@
+version: '3.4'
+
+services:
+  redis:
+    image: redis
+    container_name: redis
+    restart: on-failure
+    command: redis-server --appendonly yes
+    ports:
+      - "6379:6379"  
+    volumes:
+      - ./redis_volume:/data
+  api:
+    build:
+      context: .
+      dockerfile: ./src/API/Dockerfile
+    container_name: scrumpoker_api
+    ports:
+        - "5001:80"
+    depends_on:
+        - redis
+  ui:
+    build: 
+      context: ./src/API/clientapp
+      dockerfile: Dockerfile
+    container_name: scrumpoker_ui
+    ports:
+      - '3000:3000'
+    environment:
+      - NODE_ENV=development
+      - CHOKIDAR_USEPOLLING=true
+      - CI=true
+    depends_on:
+      - api
+    volumes:        
+      - ./src/API/clientapp/src:/ui/src
+      - '/ui/node_modules'

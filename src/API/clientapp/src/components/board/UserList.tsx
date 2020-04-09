@@ -29,7 +29,7 @@ export const UserList: FC<{ state: boolean }> = ({ state }) => {
 
   const setUpSignalRConnection = async (boardId: string) => {
     const connection = new HubConnectionBuilder()
-      .withUrl('https://localhost:5001/scrumboardhub')
+      .withUrl('http://localhost:5001/scrumboardhub')
       .withAutomaticReconnect()
       .build();
 

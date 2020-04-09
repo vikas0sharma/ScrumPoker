@@ -3,7 +3,7 @@ import { UserModel } from '../models/user-model';
 
 export const createBoard = async (board: Board): Promise<string> => {
   const result = await apiFetchUpdate(
-    'https://localhost:5001/scrum-poker/boards',
+    'http://localhost:5001/scrum-poker/boards',
     board,
   );
   return result as string;
@@ -14,7 +14,7 @@ export const createUser = async (
   user: UserModel,
 ): Promise<string> => {
   const result = await apiFetchUpdate(
-    `https://localhost:5001/scrum-poker/boards/${boardId}/users`,
+    `http://localhost:5001/scrum-poker/boards/${boardId}/users`,
     user,
   );
   return result as string;
@@ -25,7 +25,7 @@ export const updateUserPoint = async (
   user: UserModel,
 ): Promise<boolean> => {
   const result = await apiFetchUpdate(
-    `https://localhost:5001/scrum-poker/boards/${boardId}/users`,
+    `http://localhost:5001/scrum-poker/boards/${boardId}/users`,
     user,
     'PUT',
   );
@@ -34,7 +34,7 @@ export const updateUserPoint = async (
 
 export const getBoardUsers = async (boardId: string): Promise<UserModel[]> => {
   const result = await apiFetchGET(
-    `https://localhost:5001/scrum-poker/boards/${boardId}/users`,
+    `http://localhost:5001/scrum-poker/boards/${boardId}/users`,
   );
   return result;
 };
@@ -44,14 +44,14 @@ export const getUser = async (
   userId: string,
 ): Promise<UserModel> => {
   const result = apiFetchGET(
-    `https://localhost:5001/scrum-poker/boards/${boardId}/users/${userId}`,
+    `http://localhost:5001/scrum-poker/boards/${boardId}/users/${userId}`,
   );
   return result;
 };
 
 export const clearUsersPoint = async (boardId: string) => {
   const result = apiFetchUpdate(
-    `https://localhost:5001/scrum-poker/boards/${boardId}`,
+    `http://localhost:5001/scrum-poker/boards/${boardId}`,
     null,
   );
   return result;
