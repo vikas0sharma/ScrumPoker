@@ -33,7 +33,7 @@ namespace API.Controllers
                 return Ok(boardId);
             }
 
-            return NotFound();
+            return new JsonResult(new { isCreated, msg = "Not able to connect with redis" });
         }
 
         [HttpPost("boards/{boardId}")]

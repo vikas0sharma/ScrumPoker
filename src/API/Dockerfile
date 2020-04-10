@@ -7,10 +7,10 @@ EXPOSE 443
 
 FROM mcr.microsoft.com/dotnet/core/sdk:3.1-buster AS build
 WORKDIR /src
-COPY ["./src/API/API.csproj", "src/API/"]
-RUN dotnet restore "src/API/API.csproj"
+COPY ["./API.csproj", "src/"]
+RUN dotnet restore "src/API.csproj"
 COPY . .
-WORKDIR "/src/src/API"
+WORKDIR "/src/"
 RUN dotnet build "API.csproj" -c Release -o /app/build
 
 FROM build AS publish
@@ -19,4 +19,4 @@ RUN dotnet publish "API.csproj" -c Release -o /app/publish
 FROM base AS final
 WORKDIR /app
 COPY --from=publish /app/publish .
-ENTRYPOINT ["dotnet", "API.dll"]
+CMD ["dotnet", "API.dll"]

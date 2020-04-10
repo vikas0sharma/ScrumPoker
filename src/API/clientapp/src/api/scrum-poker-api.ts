@@ -2,10 +2,7 @@ import { Board } from '../models/board';
 import { UserModel } from '../models/user-model';
 
 export const createBoard = async (board: Board): Promise<string> => {
-  const result = await apiFetchUpdate(
-    'https://localhost:5001/scrum-poker/boards',
-    board,
-  );
+  const result = await apiFetchUpdate(`${scrumPokerURL}/boards`, board);
   return result as string;
 };
 
@@ -14,7 +11,7 @@ export const createUser = async (
   user: UserModel,
 ): Promise<string> => {
   const result = await apiFetchUpdate(
-    `https://localhost:5001/scrum-poker/boards/${boardId}/users`,
+    `${scrumPokerURL}/boards/${boardId}/users`,
     user,
   );
   return result as string;
@@ -25,7 +22,7 @@ export const updateUserPoint = async (
   user: UserModel,
 ): Promise<boolean> => {
   const result = await apiFetchUpdate(
-    `https://localhost:5001/scrum-poker/boards/${boardId}/users`,
+    `${scrumPokerURL}/boards/${boardId}/users`,
     user,
     'PUT',
   );
@@ -33,9 +30,7 @@ export const updateUserPoint = async (
 };
 
 export const getBoardUsers = async (boardId: string): Promise<UserModel[]> => {
-  const result = await apiFetchGET(
-    `https://localhost:5001/scrum-poker/boards/${boardId}/users`,
-  );
+  const result = await apiFetchGET(`${scrumPokerURL}/boards/${boardId}/users`);
   return result;
 };
 
@@ -44,16 +39,13 @@ export const getUser = async (
   userId: string,
 ): Promise<UserModel> => {
   const result = apiFetchGET(
-    `https://localhost:5001/scrum-poker/boards/${boardId}/users/${userId}`,
+    `${scrumPokerURL}/boards/${boardId}/users/${userId}`,
   );
   return result;
 };
 
 export const clearUsersPoint = async (boardId: string) => {
-  const result = apiFetchUpdate(
-    `https://localhost:5001/scrum-poker/boards/${boardId}`,
-    null,
-  );
+  const result = apiFetchUpdate(`${scrumPokerURL}/boards/${boardId}`, null);
   return result;
 };
 
@@ -76,6 +68,8 @@ const apiFetchUpdate = async (
 
   return await response.json();
 };
+export const baseURL = 'https://agile-scrum-poker.herokuapp.com';
+const scrumPokerURL = baseURL + '/scrum-poker';
 
 const apiFetchGET = async (url: string): Promise<any> => {
   const response = await fetch(url, {

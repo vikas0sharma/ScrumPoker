@@ -25,12 +25,11 @@ namespace API
         {
             services.AddControllers();
             services.AddCors(options =>
-                options.AddPolicy("CorsPolicy",
-                    builder =>
-                        builder.AllowAnyMethod()
-                        .AllowAnyHeader()
-                        .WithOrigins("http://localhost:3000")
-                        .AllowCredentials()));
+            options.AddPolicy("CorsPolicy", builder =>
+                builder.AllowAnyMethod()
+                .AllowAnyHeader()
+                .WithOrigins("https://agile-scrum-poker.firebaseapp.com")
+                .AllowCredentials()));
 
             services.AddSignalR();
 

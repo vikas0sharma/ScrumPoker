@@ -7,7 +7,7 @@ import {
   HubConnectionState,
   HubConnection,
 } from '@microsoft/signalr';
-import { getBoardUsers } from '../../api/scrum-poker-api';
+import { getBoardUsers, baseURL } from '../../api/scrum-poker-api';
 
 export const UserList: FC<{ state: boolean }> = ({ state }) => {
   const [users, setUsers] = useState<UserModel[]>([]);
@@ -29,7 +29,7 @@ export const UserList: FC<{ state: boolean }> = ({ state }) => {
 
   const setUpSignalRConnection = async (boardId: string) => {
     const connection = new HubConnectionBuilder()
-      .withUrl('https://localhost:5001/scrumboardhub')
+      .withUrl(`${baseURL}/scrumboardhub`)
       .withAutomaticReconnect()
       .build();
 
