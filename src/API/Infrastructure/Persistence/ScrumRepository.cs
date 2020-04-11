@@ -19,7 +19,7 @@ namespace API.Infrastructure.Persistence
 
         public async Task<bool> AddBoard(ScrumBoard scrumBoard)
         {
-            var isDone = await database.StringSetAsync(scrumBoard.Id.ToString(), JsonSerializer.Serialize(scrumBoard));
+            var isDone = await database.StringSetAsync(scrumBoard.Id.ToString(), JsonSerializer.Serialize(scrumBoard), TimeSpan.FromDays(1));
 
             return isDone;
         }
