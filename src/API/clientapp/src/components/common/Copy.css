@@ -1,0 +1,23 @@
+.svg-icon {
+  width: 1em;
+  height: 1em;
+  cursor: pointer;
+}
+
+.svg-icon:active {
+  width: 1em;
+  height: 1em;
+  cursor: pointer;
+  transform: translateY(2px);
+}
+
+.svg-icon path,
+.svg-icon polygon,
+.svg-icon rect {
+  fill: #4691f6;
+}
+
+.svg-icon circle {
+  stroke: #4691f6;
+  stroke-width: 1;
+}

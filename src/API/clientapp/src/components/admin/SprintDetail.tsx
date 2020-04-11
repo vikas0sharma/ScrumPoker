@@ -3,6 +3,7 @@ import './SprintDetail.css';
 import { useHistory, Link } from 'react-router-dom';
 import { King } from '../common/King';
 import { createBoard } from '../../api/scrum-poker-api';
+import { Copy } from '../common/Copy';
 
 export const SprintDetail = (props: {
   setAdminHandler: (isAdmin: boolean) => void;
@@ -10,6 +11,7 @@ export const SprintDetail = (props: {
   const [boardName, setBoardName] = useState('');
   const [id, setUserLink] = useState('');
   const [linkState, setLinkState] = useState(false);
+  const [href, setHref] = useState('');
 
   const onSubmitHandler = async () => {
     const id = await createBoard({
@@ -18,8 +20,17 @@ export const SprintDetail = (props: {
     });
 
     setUserLink(id);
+    setHref(`${window.location.href}boards/${id}`);
     setLinkState(true);
     props.setAdminHandler(true);
+  };
+  const onCopyClick = () => {
+    const textField = document.createElement('textarea');
+    textField.innerText = href;
+    document.body.appendChild(textField);
+    textField.select();
+    document.execCommand('copy');
+    textField.remove();
   };
 
   return (
@@ -49,10 +60,9 @@ export const SprintDetail = (props: {
               {linkState === true ? (
                 <div className="form-group">
                   <label>Please visit and share the url with the team:</label>
+                  <Copy onClickHandler={onCopyClick}></Copy>
                   <br />
-                  <Link
-                    to={`/boards/${id}`}
-                  >{`${window.location.href}boards/${id}`}</Link>
+                  <Link to={`/boards/${id}`}>{href}</Link>
                 </div>
               ) : null}
               <button
