@@ -16,13 +16,12 @@ export const User: FC<{ data: UserModel }> = ({ data }) => {
       </div>
       <div className="media-body"></div>
       <div className="media-right align-self-center">
-        <a
-          href="#"
+        <div
           className="btn btn-default"
           style={{ background: data.point > 0 ? 'green' : '#6b456a' }}
         >
           {data.showPoint ? data.point : 'Point'}
-        </a>
+        </div>
       </div>
     </div>
   );
