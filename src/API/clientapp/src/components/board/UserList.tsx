@@ -9,7 +9,7 @@ import {
 } from '@microsoft/signalr';
 import { getBoardUsers } from '../../api/scrum-poker-api';
 
-export const UserList: FC<{ state: boolean }> = ({ state }) => {
+export const UserList: FC = () => {
   const [users, setUsers] = useState<UserModel[]>([]);
   const { id } = useParams();
   const boardId = id as string;
@@ -57,7 +57,7 @@ export const UserList: FC<{ state: boolean }> = ({ state }) => {
   return (
     <div className="container">
       {users.map((u) => (
-        <User key={u.id} data={u} hiddenState={state}></User>
+        <User key={u.id} data={u}></User>
       ))}
     </div>
   );

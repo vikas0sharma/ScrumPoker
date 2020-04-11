@@ -49,6 +49,19 @@ namespace API.Controllers
             return NotFound();
         }
 
+        [HttpPost("boards/{boardId}/{state}")]
+        public async Task<IActionResult> UpdateUsersPointVisibility(Guid boardId, bool state)
+        {
+            var isToggled = await scrumRepository.TogglePoints(boardId, state);
+            await hub.Clients.Group(boardId.ToString())
+                .SendAsync("UsersAdded", await scrumRepository.GetUsersFromBoard(boardId));
+            if (isToggled)
+            {
+                return Ok(isToggled);
+            }
+            return NotFound();
+        }
+
         [HttpPost("boards/{boardId}/users")]
         public async Task<IActionResult> AddUser(Guid boardId, User user)
         {
