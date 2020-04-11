@@ -68,6 +68,21 @@ namespace API.Infrastructure.Persistence
             return board.Users;
         }
 
+        public async Task<bool> TogglePoints(Guid boardId, bool state)
+        {
+            var data = await database.StringGetAsync(boardId.ToString());
+
+            if (data.IsNullOrEmpty)
+            {
+                return false;
+            }
+
+            var board = JsonSerializer.Deserialize<ScrumBoard>(data);
+            board.Users.ForEach(u => u.ShowPoint = state);
+
+            return await AddBoard(board);
+        }
+
         public async Task<bool> UpdateUserPoint(Guid boardId, Guid userId, int point)
         {
             var data = await database.StringGetAsync(boardId.ToString());

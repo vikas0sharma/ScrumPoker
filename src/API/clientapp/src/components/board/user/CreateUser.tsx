@@ -14,6 +14,7 @@ export const CreateUser = (props: { isAdmin: boolean }) => {
       gender: gender,
       isAdmin: props.isAdmin,
       point: 0,
+      showPoint: false,
     });
     if (userId) history.push(`/boards/${id}/users/${userId}`);
   };

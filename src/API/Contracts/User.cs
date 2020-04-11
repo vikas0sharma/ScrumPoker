@@ -13,5 +13,7 @@ namespace API.Contracts
         public int Point { get; set; }
 
         public bool IsAdmin { get; set; }
+
+        public bool ShowPoint { get; set; }
     }
 }

@@ -15,5 +15,7 @@ namespace API.Contracts
         Task<bool> UpdateUserPoint(Guid boardId, Guid userId, int point);
 
         Task<bool> ClearUsersPoint(Guid boardId);
+
+        Task<bool> TogglePoints(Guid boardId, bool state);
     }
 }

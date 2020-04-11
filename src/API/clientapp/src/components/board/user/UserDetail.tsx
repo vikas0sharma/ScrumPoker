@@ -1,21 +1,42 @@
-import React, { FC, useState } from 'react';
+import React, { FC, useState, useEffect } from 'react';
 import { UserModel } from '../../../models/user-model';
+import { useParams } from 'react-router-dom';
+import {
+  togglePointVisibility,
+  getUser,
+  clearUsersPoint,
+} from '../../../api/scrum-poker-api';
 
-export const UserDetail: FC<{
-  name: string;
-  isAdmin: boolean;
-  onShowClick: (state: boolean) => void;
-  onClearClick: () => void;
-}> = (user) => {
-  const [isHidden, setHidden] = useState(true);
+export const UserDetail: FC = () => {
+  const initUserState = new UserModel();
+  const { id, userId } = useParams<{ id: string; userId: string }>();
+  const [user, setUser] = useState<UserModel>(initUserState);
+  const [isHidden, setHidden] = useState(false);
+
+  const togglePointHandler = (state: boolean) => {
+    togglePointVisibility(id, state);
+  };
+  useEffect(() => {
+    if (!user.id) {
+      getUserFromApi();
+    }
+  }, []);
+
+  const getUserFromApi = async () => {
+    const user = await getUser(id, userId);
+    setUser(user);
+    setHidden(!user.showPoint);
+  };
+  const onClearPointHandler = () => {
+    clearUsersPoint(id);
+  };
 
   const onShowClick = () => {
     setHidden(!isHidden);
-    user.onShowClick(!isHidden);
+    togglePointHandler(isHidden);
   };
   const onClearClick = () => {
-    user.onClearClick();
-    onShowClick();
+    onClearPointHandler();
   };
 
   return (

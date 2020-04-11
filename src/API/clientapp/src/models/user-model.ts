@@ -4,4 +4,5 @@ export class UserModel {
   public gender: string = '';
   public isAdmin: boolean = false;
   public point: number = 0;
+  public showPoint: boolean = false;
 }

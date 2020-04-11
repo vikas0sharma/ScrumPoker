@@ -29,6 +29,17 @@ export const updateUserPoint = async (
   return result as boolean;
 };
 
+export const togglePointVisibility = async (
+  boardId: string,
+  state: boolean,
+): Promise<boolean> => {
+  const result = await apiFetchUpdate(
+    `${scrumPokerURL}/boards/${boardId}/${state}`,
+    null,
+  );
+  return result as boolean;
+};
+
 export const getBoardUsers = async (boardId: string): Promise<UserModel[]> => {
   const result = await apiFetchGET(`${scrumPokerURL}/boards/${boardId}/users`);
   return result;
@@ -54,7 +65,6 @@ const apiFetchUpdate = async (
   body: any,
   method: string = 'POST',
 ): Promise<any> => {
-  debugger;
   const response = await fetch(url, {
     method: method,
     mode: 'cors',
@@ -68,7 +78,7 @@ const apiFetchUpdate = async (
 
   return await response.json();
 };
-export const baseURL = 'https://agile-scrum-poker.herokuapp.com';
+export const baseURL = process.env.REACT_APP_BASE_URL;
 const scrumPokerURL = baseURL + '/scrum-poker';
 
 const apiFetchGET = async (url: string): Promise<any> => {
