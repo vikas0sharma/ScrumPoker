@@ -7,7 +7,7 @@ import {
   HubConnectionState,
   HubConnection,
 } from '@microsoft/signalr';
-import { getBoardUsers } from '../../api/scrum-poker-api';
+import { getBoardUsers, baseURL } from '../../api/scrum-poker-api';
 import { ScoreList } from './ScoreList';
 import { Score } from '../../models/score';
 
