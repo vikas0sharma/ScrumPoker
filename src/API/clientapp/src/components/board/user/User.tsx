@@ -1,4 +1,4 @@
-import React, { FC, useState } from 'react';
+import React, { FC } from 'react';
 import './User.css';
 import { UserModel } from '../../../models/user-model';
 

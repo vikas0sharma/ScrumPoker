@@ -8,6 +8,8 @@ import {
   HubConnection,
 } from '@microsoft/signalr';
 import { getBoardUsers } from '../../api/scrum-poker-api';
+import { ScoreList } from './ScoreList';
+import { Score } from '../../models/score';
 
 export const UserList: FC = () => {
   const [users, setUsers] = useState<UserModel[]>([]);
@@ -54,8 +56,27 @@ export const UserList: FC = () => {
 
     return connection;
   };
+  const getSum = () => {
+    const result: Score[] = [];
+    users.reduce((res, value) => {
+      // @ts-ignore
+      if (!res[value.point]) {
+        // @ts-ignore
+        res[value.point] = { point: value.point, sum: 0 };
+        // @ts-ignore
+        result.push(res[value.point]);
+      }
+      // @ts-ignore
+      res[value.point].sum += 1;
+      return res;
+    }, {});
+    return result;
+  };
   return (
     <div className="container">
+      {users.some((u) => u.showPoint) ? (
+        <ScoreList data={getSum()}></ScoreList>
+      ) : null}
       {users.map((u) => (
         <User key={u.id} data={u}></User>
       ))}
