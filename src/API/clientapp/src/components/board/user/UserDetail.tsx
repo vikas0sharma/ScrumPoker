@@ -6,6 +6,8 @@ import {
   getUser,
   clearUsersPoint,
 } from '../../../api/scrum-poker-api';
+import { Share } from '../../common/Share';
+import CopyText from '../../common/CopyText';
 
 export const UserDetail: FC = () => {
   const initUserState = new UserModel();
@@ -38,6 +40,11 @@ export const UserDetail: FC = () => {
   const onClearClick = () => {
     onClearPointHandler();
   };
+  const shareHandler = () => {
+    let href = window.location.href;
+    href = href.substring(0, href.indexOf('users'));
+    CopyText(href);
+  };
 
   return (
     <div className="card border-primary">
@@ -63,6 +70,13 @@ export const UserDetail: FC = () => {
             </button>
           </div>
         ) : null}
+        <button
+          onClick={shareHandler}
+          type="button"
+          className="btn btn-outline-secondary mr-3 float-right"
+        >
+          Copy board link <Share></Share>
+        </button>
       </div>
     </div>
   );
