@@ -4,6 +4,7 @@ import { useHistory, Link } from 'react-router-dom';
 import { King } from '../common/King';
 import { createBoard } from '../../api/scrum-poker-api';
 import { Copy } from '../common/Copy';
+import CopyText from '../common/CopyText';
 
 export const SprintDetail = (props: {
   setAdminHandler: (isAdmin: boolean) => void;
@@ -25,12 +26,7 @@ export const SprintDetail = (props: {
     props.setAdminHandler(true);
   };
   const onCopyClick = () => {
-    const textField = document.createElement('textarea');
-    textField.innerText = href;
-    document.body.appendChild(textField);
-    textField.select();
-    document.execCommand('copy');
-    textField.remove();
+    CopyText(href);
   };
 
   return (
