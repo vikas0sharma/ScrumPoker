@@ -11,18 +11,21 @@ export const SprintDetail = (props: {
 }) => {
   const [boardName, setBoardName] = useState('');
   const [id, setUserLink] = useState('');
-  const [linkState, setLinkState] = useState(false);
+  const [isLoading, setLoadingState] = useState(false);
+  const [linkCreated, setLinkState] = useState(false);
   const [href, setHref] = useState('');
 
   const onSubmitHandler = async () => {
+    setLoadingState(true);
     const id = await createBoard({
       name: boardName,
       description: '',
     });
-
+    setLoadingState(false);
+    setLinkState(true);
     setUserLink(id);
     setHref(`${window.location.href}boards/${id}`);
-    setLinkState(true);
+
     props.setAdminHandler(true);
   };
   const onCopyClick = () => {
@@ -53,7 +56,7 @@ export const SprintDetail = (props: {
                   className="form-control form-control-lg rounded-0"
                 />
               </div>
-              {linkState === true ? (
+              {linkCreated === true ? (
                 <div className="form-group">
                   <label>Please visit and share the url with the team:</label>
                   <Copy onClickHandler={onCopyClick}></Copy>
@@ -64,9 +67,22 @@ export const SprintDetail = (props: {
               <button
                 type="submit"
                 onClick={() => onSubmitHandler()}
-                className="btn btn-default btn-lg float-left"
+                className={`btn btn-default btn-lg float-left ${
+                  isLoading ? 'disabled' : ''
+                }`}
               >
-                Create
+                {isLoading === true ? (
+                  <>
+                    <span
+                      className="spinner-border spinner-border-sm mr-2"
+                      role="status"
+                      aria-hidden="true"
+                    ></span>
+                    <span>Creating ...</span>
+                  </>
+                ) : (
+                  <span>Create</span>
+                )}
               </button>
             </div>
           </div>
