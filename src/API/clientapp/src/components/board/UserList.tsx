@@ -2,14 +2,10 @@ import React, { useState, useEffect, FC } from 'react';
 import { User } from './user/User';
 import { UserModel } from '../../models/user-model';
 import { useParams } from 'react-router-dom';
-import {
-  HubConnectionBuilder,
-  HubConnectionState,
-  HubConnection,
-} from '@microsoft/signalr';
+import { HubConnectionBuilder, HubConnectionState } from '@microsoft/signalr';
 import { getBoardUsers, baseURL } from '../../api/scrum-poker-api';
-import { ScoreList } from './ScoreList';
 import { Score } from '../../models/score';
+import ScoreChart from './ScoreChart';
 
 export const UserList: FC = () => {
   const [users, setUsers] = useState<UserModel[]>([]);
@@ -19,7 +15,7 @@ export const UserList: FC = () => {
     if (users.length === 0) {
       getUsers();
     }
-    setUpSignalRConnection(boardId).then((con) => {
+    setUpSignalRConnection(boardId).then(() => {
       //connection = con;
     });
   }, []);
@@ -62,7 +58,7 @@ export const UserList: FC = () => {
       // @ts-ignore
       if (!res[value.point]) {
         // @ts-ignore
-        res[value.point] = { point: value.point, sum: 0 };
+        res[value.point] = { point: value.point + ' point', sum: 0 };
         // @ts-ignore
         result.push(res[value.point]);
       }
@@ -72,10 +68,12 @@ export const UserList: FC = () => {
     }, {});
     return result;
   };
+
   return (
     <div className="container">
       {users.some((u) => u.showPoint) ? (
-        <ScoreList data={getSum()}></ScoreList>
+        // <ScoreList data={getSum()}></ScoreList>
+        <ScoreChart scores={getSum()}></ScoreChart>
       ) : null}
       {users.map((u) => (
         <User key={u.id} data={u}></User>
