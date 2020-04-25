@@ -1,4 +1,4 @@
 export interface Score {
-  point: number;
+  point: string;
   sum: number;
 }
