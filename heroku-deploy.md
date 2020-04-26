@@ -1,0 +1,6 @@
+- heroku login
+- heroku container:login
+- docker login --username=_ --password=$(heroku auth:token) registry.heroku.com
+- docker build -t registry.heroku.com/agile-scrum-poker/web .
+- docker push registry.heroku.com/agile-scrum-poker/web
+- heroku container:release web --app agile-scrum-poker
