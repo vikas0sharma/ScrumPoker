@@ -76,7 +76,7 @@ export const UserList: FC = () => {
         <ScoreChart scores={getSum()}></ScoreChart>
       ) : null}
       {users.map((u) => (
-        <User key={u.id} data={u}></User>
+        <User key={u.userId} user={u}></User>
       ))}
     </div>
   );
