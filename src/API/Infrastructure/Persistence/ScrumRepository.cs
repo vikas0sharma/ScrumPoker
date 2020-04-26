@@ -39,6 +39,21 @@ namespace API.Infrastructure.Persistence
             return await AddBoard(board);
         }
 
+        public async Task<bool> RemoveUserFromBoard(Guid boardId, Guid userId)
+        {
+            var data = await database.StringGetAsync(boardId.ToString());
+
+            if (data.IsNullOrEmpty)
+            {
+                return false;
+            }
+
+            var board = JsonSerializer.Deserialize<ScrumBoard>(data);
+            //board.Users = board.Users.Where(u => u.Id != userId).ToList();
+            board.Users.RemoveAll(u => u.UserId == userId);
+            return await AddBoard(board);
+        }
+
         public async Task<bool> ClearUsersPoint(Guid boardId)
         {
             var data = await database.StringGetAsync(boardId.ToString());
@@ -87,7 +102,7 @@ namespace API.Infrastructure.Persistence
         {
             var data = await database.StringGetAsync(boardId.ToString());
             var board = JsonSerializer.Deserialize<ScrumBoard>(data);
-            var user = board.Users.FirstOrDefault(u => u.Id == userId);
+            var user = board.Users.FirstOrDefault(u => u.UserId == userId);
             if (user != null)
             {
                 user.Point = point;

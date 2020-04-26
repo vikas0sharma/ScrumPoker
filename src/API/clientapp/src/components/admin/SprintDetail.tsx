@@ -1,20 +1,19 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import './SprintDetail.css';
 import { useHistory, Link } from 'react-router-dom';
 import { King } from '../common/King';
 import { createBoard } from '../../api/scrum-poker-api';
 import { Copy } from '../common/Copy';
 import CopyText from '../common/CopyText';
+import { adminContext } from '../../models/context';
 
-export const SprintDetail = (props: {
-  setAdminHandler: (isAdmin: boolean) => void;
-}) => {
+export const SprintDetail = () => {
   const [boardName, setBoardName] = useState('');
   const [id, setUserLink] = useState('');
   const [isLoading, setLoadingState] = useState(false);
   const [linkCreated, setLinkState] = useState(false);
   const [href, setHref] = useState('');
-
+  const { setAdmin } = useContext(adminContext);
   const onSubmitHandler = async () => {
     setLoadingState(true);
     const id = await createBoard({
@@ -26,7 +25,7 @@ export const SprintDetail = (props: {
     setUserLink(id);
     setHref(`${window.location.href}boards/${id}`);
 
-    props.setAdminHandler(true);
+    setAdmin(true);
   };
   const onCopyClick = () => {
     CopyText(href);

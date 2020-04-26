@@ -65,13 +65,13 @@ namespace API.Controllers
         [HttpPost("boards/{boardId}/users")]
         public async Task<IActionResult> AddUser(Guid boardId, User user)
         {
-            user.Id = Guid.NewGuid();
+            user.UserId = Guid.NewGuid();
             var isAdded = await scrumRepository.AddUserToBoard(boardId, user);
             await hub.Clients.Group(boardId.ToString())
                 .SendAsync("UsersAdded", await scrumRepository.GetUsersFromBoard(boardId));
             if (isAdded)
             {
-                return Ok(user.Id);
+                return Ok(user.UserId);
             }
             return NotFound();
         }
@@ -88,18 +88,28 @@ namespace API.Controllers
         public async Task<IActionResult> GetUser(Guid boardId, Guid userId)
         {
             var users = await scrumRepository.GetUsersFromBoard(boardId);
-            var user = users.FirstOrDefault(u => u.Id == userId);
+            var user = users.FirstOrDefault(u => u.UserId == userId);
             return Ok(user);
         }
 
         [HttpPut("boards/{boardId}/users")]
         public async Task<IActionResult> UpdateUser(Guid boardId, User user)
         {
-            var isUpdated = await scrumRepository.UpdateUserPoint(boardId, user.Id, user.Point);
+            var isUpdated = await scrumRepository.UpdateUserPoint(boardId, user.UserId, user.Point);
             await hub.Clients.Group(boardId.ToString())
                 .SendAsync("UsersAdded", await scrumRepository.GetUsersFromBoard(boardId));
 
             return Ok(isUpdated);
+        }
+
+        [HttpDelete("boards/{boardId}/users/{userId}")]
+        public async Task<IActionResult> RemoveUser(Guid boardId, Guid userId)
+        {
+            var isDeleted = await scrumRepository.RemoveUserFromBoard(boardId, userId);
+            await hub.Clients.Group(boardId.ToString())
+                .SendAsync("UsersAdded", await scrumRepository.GetUsersFromBoard(boardId));
+
+            return Ok(isDeleted);
         }
     }
 }

@@ -35,7 +35,7 @@ const CardList = () => {
   const { id, userId } = useParams();
   const onCardClickHandler = (val: number) => {
     const user = new UserModel();
-    user.id = userId;
+    user.userId = userId;
     user.point = val;
 
     const result = updateUserPoint(id as string, user);

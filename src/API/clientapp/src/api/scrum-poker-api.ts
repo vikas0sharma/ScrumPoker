@@ -29,6 +29,18 @@ export const updateUserPoint = async (
   return result as boolean;
 };
 
+export const deleteUser = async (
+  boardId: string,
+  userId: string,
+): Promise<boolean> => {
+  const result = await apiFetchUpdate(
+    `${scrumPokerURL}/boards/${boardId}/users/${userId}`,
+    null,
+    'DELETE',
+  );
+  return result as boolean;
+};
+
 export const togglePointVisibility = async (
   boardId: string,
   state: boolean,

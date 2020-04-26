@@ -1,5 +1,5 @@
 export class UserModel {
-  id?: string;
+  userId?: string;
   public name: string = '';
   public gender: string = '';
   public isAdmin: boolean = false;

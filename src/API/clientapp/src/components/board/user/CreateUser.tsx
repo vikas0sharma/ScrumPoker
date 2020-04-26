@@ -1,18 +1,20 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import { King } from '../../common/King';
 import { useParams, useHistory } from 'react-router-dom';
 import { createUser } from '../../../api/scrum-poker-api';
+import { adminContext } from '../../../models/context';
 
-export const CreateUser = (props: { isAdmin: boolean }) => {
+export const CreateUser = () => {
   const [userName, setUserName] = useState('');
   const [gender, setGender] = useState('M');
   const history = useHistory();
   const { id } = useParams();
+  const { isAdmin } = useContext(adminContext);
   const onSubmitHandler = async () => {
     const userId = await createUser(id as string, {
       name: userName,
       gender: gender,
-      isAdmin: props.isAdmin,
+      isAdmin: isAdmin,
       point: 0,
       showPoint: false,
     });

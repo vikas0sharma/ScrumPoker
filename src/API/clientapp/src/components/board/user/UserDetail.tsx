@@ -1,4 +1,4 @@
-import React, { FC, useState, useEffect } from 'react';
+import React, { FC, useState, useEffect, useContext } from 'react';
 import { UserModel } from '../../../models/user-model';
 import { useParams } from 'react-router-dom';
 import {
@@ -8,18 +8,19 @@ import {
 } from '../../../api/scrum-poker-api';
 import { Share } from '../../common/Share';
 import CopyText from '../../common/CopyText';
+import { adminContext } from '../../../models/context';
 
 export const UserDetail: FC = () => {
   const initUserState = new UserModel();
   const { id, userId } = useParams<{ id: string; userId: string }>();
   const [user, setUser] = useState<UserModel>(initUserState);
   const [isHidden, setHidden] = useState(false);
-
+  const { setAdmin } = useContext(adminContext);
   const togglePointHandler = (state: boolean) => {
     togglePointVisibility(id, state);
   };
   useEffect(() => {
-    if (!user.id) {
+    if (!user.userId) {
       getUserFromApi();
     }
   }, []);
@@ -28,6 +29,7 @@ export const UserDetail: FC = () => {
     const user = await getUser(id, userId);
     setUser(user);
     setHidden(!user.showPoint);
+    setAdmin(user.isAdmin);
   };
   const onClearPointHandler = () => {
     clearUsersPoint(id);
