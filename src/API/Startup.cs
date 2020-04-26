@@ -27,10 +27,12 @@ namespace API
             services.AddCors(options =>
                 options.AddPolicy("CorsPolicy",
                     builder =>
-                        builder.AllowAnyMethod()
+                        builder
+                        .WithOrigins("https://scrumpokerui.azurewebsites.net")
                         .AllowAnyHeader()
-                        .WithOrigins("http://localhost:3000")
-                        .AllowCredentials()));
+                        .AllowAnyMethod()
+                        .AllowCredentials()
+                        .SetIsOriginAllowed((host) => true)));
 
             services.AddSignalR();
 
@@ -42,8 +44,6 @@ namespace API
             {
                 var settings = sp.GetRequiredService<IOptions<APISettings>>().Value;
                 var configuration = ConfigurationOptions.Parse(settings.ConnectionString, true);
-
-                configuration.ResolveDns = true;
 
                 return ConnectionMultiplexer.Connect(configuration);
             });

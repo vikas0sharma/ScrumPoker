@@ -2,8 +2,12 @@ import React, { useState, useEffect, FC } from 'react';
 import { User } from './user/User';
 import { UserModel } from '../../models/user-model';
 import { useParams } from 'react-router-dom';
-import { HubConnectionBuilder, HubConnectionState } from '@microsoft/signalr';
-import { getBoardUsers } from '../../api/scrum-poker-api';
+import {
+  HubConnectionBuilder,
+  HubConnectionState,
+  HttpTransportType,
+} from '@microsoft/signalr';
+import { getBoardUsers, baseURL } from '../../api/scrum-poker-api';
 import { Score } from '../../models/score';
 import ScoreChart from './ScoreChart';
 
@@ -27,7 +31,7 @@ export const UserList: FC = () => {
 
   const setUpSignalRConnection = async (boardId: string) => {
     const connection = new HubConnectionBuilder()
-      .withUrl('https://localhost:5001/scrumboardhub')
+      .withUrl(`${baseURL}/scrumboardhub`)
       .withAutomaticReconnect()
       .build();
 
