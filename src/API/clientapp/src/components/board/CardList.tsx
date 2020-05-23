@@ -31,6 +31,11 @@ const CardList = () => {
       name: 'Eight',
       val: 8,
     },
+    {
+        path: '13.png',
+        name: 'Thirteen',
+        val: 13,
+      },
   ];
   const { id, userId } = useParams();
   const onCardClickHandler = (val: number) => {
